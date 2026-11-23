@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section data-section="hero">
+    <img src="{{ data.hero.icon }}" alt="" width="64" height="64">
+    <h1>{{ data.hero.title }}</h1>
+    <p>{{ data.hero.subtitle }}</p>
+    <a href="{{ data.hero.cta.url }}">{{ data.hero.cta.title }}</a>
+</section>
+
+<section data-section="categories">
+    <h2>Categories</h2>
+    <ul>
+        {% for category in data.categories %}
+        <li data-slug="{{ category.slug }}">
+            <img src="{{ category.icon }}" alt="" width="40" height="40">
+            <h3>{{ category.title }}</h3>
+            <p>{{ category.description }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+
+<section data-section="featured-products">
+    <h2>Featured Gear</h2>
+    <ul>
+        {% for product in data.featured_products %}
+        <li data-id="{{ product.id }}" data-category="{{ product.category }}">
+            <img src="{{ product.icon }}" alt="" width="48" height="48">
+            {% if product.badge %}<span>{{ product.badge }}</span>{% endif %}
+            <h3>{{ product.name }}</h3>
+            <p>
+                <data value="{{ product.price }}">${{ product.price|floatformat:2 }}</data>
+                {% if product.old_price %}<del>${{ product.old_price|floatformat:2 }}</del>{% endif %}
+            </p>
+            <p>Rating: {{ product.rating }} / 5</p>
+            <p>{% if product.in_stock %}In stock{% else %}Out of stock{% endif %}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+
+<section data-section="advantages">
+    <h2>Why NEON PULSE</h2>
+    <ul>
+        {% for advantage in data.advantages %}
+        <li>
+            <img src="{{ advantage.icon }}" alt="" width="36" height="36">
+            <h3>{{ advantage.title }}</h3>
+            <p>{{ advantage.text }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}
