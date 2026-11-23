@@ -5,6 +5,10 @@ def icon(name, color="00f0ff"):
     return f"{ICON_BASE}/{name}.svg?color=%23{color}"
 
 
+def flag(code):
+    return f"https://api.iconify.design/flag/{code}-4x3.svg"
+
+
 SITE = {
     "name": "NEON PULSE",
     "tagline": "Gear for DJs who play after midnight",
@@ -102,10 +106,10 @@ MANAGEMENT = {
     "subtitle": "The people who keep the beat running at NEON PULSE.",
     "icon": icon("account-tie"),
     "members": [
-        {"id": 1, "name": "Maksym Koval", "alias": "DJ VOLTAGE", "position": "Founder & CEO", "bio": "Club resident for 12 years before building the store he always wanted to shop in.", "icon": icon("account-music", "ff2bd6")},
-        {"id": 2, "name": "Olena Shevchuk", "alias": "NEONA", "position": "Chief Operating Officer", "bio": "Runs logistics and makes sure every CDJ reaches its booth on time.", "icon": icon("account-tie", "ff2bd6")},
-        {"id": 3, "name": "Artem Bondar", "alias": "SUBFRAME", "position": "Head of Product", "bio": "Tests every controller, mixer and headphone before it hits the catalog.", "icon": icon("cog-outline", "ff2bd6")},
-        {"id": 4, "name": "Iryna Melnyk", "alias": "GLITCHA", "position": "Head of Customer Support", "bio": "Leads a team of working DJs who answer customer questions day and night.", "icon": icon("headset", "ff2bd6")},
+        {"id": 1, "slug": "ceo", "name": "Maksym Koval", "alias": "DJ VOLTAGE", "position": "Founder & CEO", "bio": "Club resident for 12 years before building the store he always wanted to shop in.", "icon": icon("account-music", "ff2bd6")},
+        {"id": 2, "slug": "coo", "name": "Olena Shevchuk", "alias": "NEONA", "position": "Chief Operating Officer", "bio": "Runs logistics and makes sure every CDJ reaches its booth on time.", "icon": icon("account-tie", "ff2bd6")},
+        {"id": 3, "slug": "product", "name": "Artem Bondar", "alias": "SUBFRAME", "position": "Head of Product", "bio": "Tests every controller, mixer and headphone before it hits the catalog.", "icon": icon("cog-outline", "ff2bd6")},
+        {"id": 4, "slug": "support", "name": "Iryna Melnyk", "alias": "GLITCHA", "position": "Head of Customer Support", "bio": "Leads a team of working DJs who answer customer questions day and night.", "icon": icon("headset", "ff2bd6")},
     ],
 }
 
@@ -157,6 +161,176 @@ CONTACTS = {
         "url": "https://www.openstreetmap.org/?mlat=46.4843&mlon=30.7387#map=16/46.4843/30.7387",
     },
 }
+
+def news_category(slug, title, description, icon_name):
+    return {
+        "slug": slug,
+        "title": title,
+        "icon": icon(icon_name),
+        "data": {
+            "title": title,
+            "description": description,
+            "items": [item for item in NEWS["items"] if item["tag"].lower() == slug],
+        },
+    }
+
+
+def member_profile(slug, responsibilities, favorite_gear, quote):
+    member = next(item for item in MANAGEMENT["members"] if item["slug"] == slug)
+    return {
+        "slug": slug,
+        "title": member["position"],
+        "icon": member["icon"],
+        "data": {
+            **member,
+            "quote": quote,
+            "responsibilities": responsibilities,
+            "favorite_gear": [product for product in FEATURED_PRODUCTS if product["id"] in favorite_gear],
+        },
+    }
+
+
+SUBSECTIONS = {
+    "news": [
+        news_category("arrivals", "New Arrivals", "Fresh gear that just landed in our warehouse.", "package-variant-closed"),
+        news_category("sale", "Sales & Deals", "Discounts and limited offers on DJ equipment.", "sale"),
+        news_category("firmware", "Firmware Updates", "Software and firmware news for your decks.", "update"),
+        news_category("events", "Events", "Showroom nights, workshops and live sets.", "calendar-star"),
+        news_category("guides", "Guides", "Practical buying and setup guides for DJs.", "book-open-variant"),
+    ],
+    "management": [
+        member_profile("ceo", ["Company strategy", "Brand partnerships", "Artist relations"], [3, 4], "Every DJ deserves gear that never lets the floor go quiet."),
+        member_profile("coo", ["Logistics and warehouse", "International offices", "Delivery partners"], [1, 6], "If it ships tonight, it plays tomorrow."),
+        member_profile("product", ["Catalog curation", "Booth testing", "Firmware support"], [2, 5], "Nothing enters the catalog until it survives a six-hour set."),
+        member_profile("support", ["Customer support", "Warranty and returns", "Setup consultations"], [7, 8], "Ask us anything about your setup. We have been there."),
+    ],
+    "about": [
+        {
+            "slug": "history",
+            "title": "Our History",
+            "icon": icon("history"),
+            "data": {
+                "title": "Our History",
+                "description": "From a Telegram shop with used CDJs to a flagship DJ showroom.",
+                "timeline": ABOUT["timeline"],
+            },
+        },
+        {
+            "slug": "values",
+            "title": "Our Values",
+            "icon": icon("heart-pulse"),
+            "data": {
+                "title": "Our Values",
+                "description": "Principles every member of the crew follows.",
+                "values": ABOUT["values"],
+            },
+        },
+        {
+            "slug": "brands",
+            "title": "Our Brands",
+            "icon": icon("factory"),
+            "data": {
+                "title": "Our Brands",
+                "description": "We are an official dealer for leading DJ equipment manufacturers.",
+                "brands": [
+                    {"name": "Pioneer DJ", "country": "Japan", "categories": ["controllers", "players", "headphones"]},
+                    {"name": "Technics", "country": "Japan", "categories": ["players"]},
+                    {"name": "Rane", "country": "USA", "categories": ["controllers", "mixers"]},
+                    {"name": "Allen & Heath", "country": "United Kingdom", "categories": ["mixers"]},
+                    {"name": "Sennheiser", "country": "Germany", "categories": ["headphones", "microphones"]},
+                    {"name": "Shure", "country": "USA", "categories": ["microphones"]},
+                    {"name": "KRK", "country": "USA", "categories": ["monitors"]},
+                    {"name": "Ortofon", "country": "Denmark", "categories": ["accessories"]},
+                ],
+            },
+        },
+    ],
+    "contacts": [
+        {
+            "slug": "ukraine",
+            "title": "Ukraine",
+            "icon": flag("ua"),
+            "data": {
+                "country": "Ukraine",
+                "office": "Flagship Showroom",
+                "city": "Odesa",
+                "flag": flag("ua"),
+                "channels": [
+                    {"type": "address", "label": "Address", "value": "12 Derybasivska St, Odesa 65026, Ukraine", "icon": icon("map-marker", "ff2bd6")},
+                    {"type": "phone", "label": "Phone", "value": "+380 48 700 12 34", "href": "tel:+380487001234", "icon": icon("phone", "ff2bd6")},
+                    {"type": "email", "label": "Email", "value": "ukraine@neonpulse.dj", "href": "mailto:ukraine@neonpulse.dj", "icon": icon("email-outline", "ff2bd6")},
+                ],
+                "hours": CONTACTS["hours"],
+                "shipping": {"days": "1-2", "cost": 0.00, "free_from": 0.00},
+                "map": CONTACTS["map"],
+            },
+        },
+        {
+            "slug": "france",
+            "title": "France",
+            "icon": flag("fr"),
+            "data": {
+                "country": "France",
+                "office": "Paris Pickup Point",
+                "city": "Paris",
+                "flag": flag("fr"),
+                "channels": [
+                    {"type": "address", "label": "Address", "value": "48 Rue Oberkampf, 75011 Paris, France", "icon": icon("map-marker", "ff2bd6")},
+                    {"type": "phone", "label": "Phone", "value": "+33 1 84 60 12 34", "href": "tel:+33184601234", "icon": icon("phone", "ff2bd6")},
+                    {"type": "email", "label": "Email", "value": "france@neonpulse.dj", "href": "mailto:france@neonpulse.dj", "icon": icon("email-outline", "ff2bd6")},
+                ],
+                "hours": [
+                    {"days": "Tue - Sat", "time": "12:00 - 20:00"},
+                    {"days": "Sun - Mon", "time": "Closed"},
+                ],
+                "shipping": {"days": "3-5", "cost": 19.00, "free_from": 499.00},
+                "map": {
+                    "lat": 48.8650,
+                    "lng": 2.3770,
+                    "zoom": 16,
+                    "url": "https://www.openstreetmap.org/?mlat=48.8650&mlon=2.3770#map=16/48.8650/2.3770",
+                },
+            },
+        },
+        {
+            "slug": "austria",
+            "title": "Austria",
+            "icon": flag("at"),
+            "data": {
+                "country": "Austria",
+                "office": "Vienna Pickup Point",
+                "city": "Vienna",
+                "flag": flag("at"),
+                "channels": [
+                    {"type": "address", "label": "Address", "value": "Mariahilfer Str. 88, 1070 Vienna, Austria", "icon": icon("map-marker", "ff2bd6")},
+                    {"type": "phone", "label": "Phone", "value": "+43 1 253 12 34", "href": "tel:+4312531234", "icon": icon("phone", "ff2bd6")},
+                    {"type": "email", "label": "Email", "value": "austria@neonpulse.dj", "href": "mailto:austria@neonpulse.dj", "icon": icon("email-outline", "ff2bd6")},
+                ],
+                "hours": [
+                    {"days": "Mon - Fri", "time": "11:00 - 19:00"},
+                    {"days": "Sat", "time": "10:00 - 17:00"},
+                    {"days": "Sun", "time": "Closed"},
+                ],
+                "shipping": {"days": "3-4", "cost": 15.00, "free_from": 399.00},
+                "map": {
+                    "lat": 48.1980,
+                    "lng": 16.3460,
+                    "zoom": 16,
+                    "url": "https://www.openstreetmap.org/?mlat=48.1980&mlon=16.3460#map=16/48.1980/16.3460",
+                },
+            },
+        },
+    ],
+}
+
+
+def subsection_slugs(section):
+    return [item["slug"] for item in SUBSECTIONS.get(section, [])]
+
+
+def find_subsection(section, slug):
+    return next((item for item in SUBSECTIONS.get(section, []) if item["slug"] == slug), None)
+
 
 PAGES = {
     "home": {"title": "Home", "data": HOME},

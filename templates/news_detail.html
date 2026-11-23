@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section data-section="news-category" data-slug="{{ subsection }}">
+    <h1>{{ data.title }}</h1>
+    <p>{{ data.description }}</p>
+    {% for item in data.items %}
+    <article data-id="{{ item.id }}" data-slug="{{ item.slug }}">
+        <img src="{{ item.icon }}" alt="" width="40" height="40">
+        <time datetime="{{ item.date }}">{{ item.date }}</time>
+        <h2>{{ item.title }}</h2>
+        <p>{{ item.excerpt }}</p>
+    </article>
+    {% empty %}
+    <p>No transmissions in this channel yet.</p>
+    {% endfor %}
+</section>
+{% endblock %}
