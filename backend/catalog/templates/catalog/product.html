@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<article data-section="product" data-id="{{ data.product.id }}">
+    <h1>{{ data.product.name }}</h1>
+    <p>{{ data.product.brand }} · SKU {{ data.product.sku }} · {{ data.product.rating }} / 5 ({{ data.product.reviews }} reviews)</p>
+    {% for photo in data.product.images %}
+    <figure>
+        <img src="{{ photo.url }}" alt="{{ photo.alt }}" width="640" height="480">
+        <figcaption>Photo: {{ photo.credit.author }}, {{ photo.credit.license }}, <a href="{{ photo.credit.source }}" rel="noopener">{{ photo.credit.provider }}</a></figcaption>
+    </figure>
+    {% endfor %}
+    <p>
+        <data value="{{ data.product.price }}">${{ data.product.price|floatformat:2 }}</data>
+        {% if data.product.old_price %}<del>${{ data.product.old_price|floatformat:2 }}</del> −{{ data.product.discount }}%{% endif %}
+    </p>
+    <p>{% if data.product.in_stock %}In stock: {{ data.product.stock }} pcs{% else %}Out of stock{% endif %}</p>
+    <p>{{ data.product.description }}</p>
+    <h2>Features</h2>
+    <ul>
+        {% for feature in data.product.features %}
+        <li>{{ feature }}</li>
+        {% endfor %}
+    </ul>
+    <h2>Specifications</h2>
+    <dl>
+        {% for spec in data.product.specs %}
+        <dt>{{ spec.label }}</dt>
+        <dd>{{ spec.value }}</dd>
+        {% endfor %}
+    </dl>
+</article>
+
+<section data-section="related">
+    <h2>You may also like</h2>
+    {% include "partials/product_list.html" with products=data.related %}
+</section>
+{% endblock %}

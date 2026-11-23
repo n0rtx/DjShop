@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section data-section="news">
+    <h1>{{ data.title }}</h1>
+    <p>{{ data.subtitle }}</p>
+    {% include "partials/news_list.html" with items=data.items %}
+</section>
+{% endblock %}

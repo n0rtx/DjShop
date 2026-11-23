@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section data-section="not-found">
+    <p>404</p>
+    <h1>{{ data.title }}</h1>
+    <p>{{ data.subtitle }}</p>
+    <ul>
+        {% for link in data.links %}
+        <li><a href="{{ link.url }}">{{ link.title }}</a></li>
+        {% endfor %}
+    </ul>
+    <h2>Popular right now</h2>
+    {% include "partials/product_list.html" with products=data.products %}
+</section>
+{% endblock %}

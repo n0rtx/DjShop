@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section data-section="member" data-slug="{{ subsection }}">
+    <h1>{{ data.name }}</h1>
+    <p><strong>{{ data.alias }}</strong> · {{ data.position }}</p>
+    <p>{{ data.bio }}</p>
+    <blockquote>{{ data.quote }}</blockquote>
+    <h2>Responsibilities</h2>
+    <ul>
+        {% for item in data.responsibilities %}
+        <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+</section>
+
+<section data-section="favorite-gear">
+    <h2>Favorite Gear</h2>
+    {% include "partials/product_list.html" with products=data.favorite_gear %}
+</section>
+{% endblock %}

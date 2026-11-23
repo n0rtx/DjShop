@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section data-section="hero">
+    {% for slide in data.slides %}
+    <article>
+        <img src="{{ slide.image }}" alt="" width="640" height="360" loading="lazy">
+        <h1>{{ slide.title }}</h1>
+        <p>{{ slide.subtitle }}</p>
+        <a href="{{ slide.cta.url }}">{{ slide.cta.title }}</a>
+    </article>
+    {% endfor %}
+</section>
+
+<section data-section="categories">
+    <h2>Categories</h2>
+    <ul>
+        {% for category in data.categories %}
+        <li><a href="{{ category.url }}"><img src="{{ category.image }}" alt="" width="160" height="120" loading="lazy"> {{ category.title }} ({{ category.count }})</a></li>
+        {% endfor %}
+    </ul>
+</section>
+
+<section data-section="deals">
+    <h2>Hot Deals</h2>
+    {% include "partials/product_list.html" with products=data.deals %}
+</section>
+
+<section data-section="bestsellers">
+    <h2>Bestsellers</h2>
+    {% include "partials/product_list.html" with products=data.bestsellers %}
+</section>
+
+<section data-section="advantages">
+    <h2>Why NEON PULSE</h2>
+    <ul>
+        {% for advantage in data.advantages %}
+        <li><h3>{{ advantage.title }}</h3><p>{{ advantage.text }}</p></li>
+        {% endfor %}
+    </ul>
+</section>
+
+<section data-section="news">
+    <h2>Latest News</h2>
+    {% include "partials/news_list.html" with items=data.news %}
+</section>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section data-section="contacts">
+    <h1>{{ data.title }}</h1>
+    <p>{{ data.subtitle }}</p>
+    {% include "partials/channels.html" with channels=data.channels hours=data.hours map=data.map %}
+</section>
+
+<section data-section="offices">
+    <h2>Our Locations</h2>
+    <ul>
+        {% for office in data.offices %}
+        <li><a href="{{ office.url }}"><img src="{{ office.flag }}" alt="" width="32" height="24"> {{ office.country }} — {{ office.office }}, {{ office.city }}</a></li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

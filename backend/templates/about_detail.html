@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section data-section="about-{{ subsection }}">
+    <h1>{{ data.title }}</h1>
+    <p>{{ data.description }}</p>
+
+    {% if data.timeline %}
+    <ol>
+        {% for step in data.timeline %}
+        <li><time datetime="{{ step.year }}">{{ step.year }}</time> — <strong>{{ step.title }}</strong>: {{ step.text }}</li>
+        {% endfor %}
+    </ol>
+    {% endif %}
+
+    {% if data.values %}
+    <ul>
+        {% for value in data.values %}
+        <li><h2>{{ value.title }}</h2><p>{{ value.text }}</p></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if data.brands %}
+    <ul>
+        {% for brand in data.brands %}
+        <li><h2>{{ brand.name }}</h2><p>{{ brand.country }}, since {{ brand.since }} · {{ brand.categories|join:", " }}</p></li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if data.delivery %}
+    <h2>Delivery</h2>
+    <ul>
+        {% for item in data.delivery %}
+        <li><strong>{{ item.title }}</strong>: {{ item.text }}</li>
+        {% endfor %}
+    </ul>
+    <h2>Payment</h2>
+    <ul>
+        {% for item in data.payment %}
+        <li><strong>{{ item.title }}</strong>: {{ item.text }}</li>
+        {% endfor %}
+    </ul>
+    <h2>Warranty & Returns</h2>
+    <ul>
+        {% for item in data.warranty %}
+        <li>{{ item }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</section>
+{% endblock %}

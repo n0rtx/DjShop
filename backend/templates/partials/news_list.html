@@ -1,0 +1,12 @@
+{% for item in items %}
+<article data-id="{{ item.id }}">
+    <a href="{{ item.url }}">
+        <img src="{{ item.image }}" alt="" width="320" height="200" loading="lazy">
+        <h3>{{ item.title }}</h3>
+    </a>
+    <p><span>{{ item.tag }}</span> · <time datetime="{{ item.date }}">{{ item.date }}</time></p>
+    <p>{{ item.excerpt }}</p>
+</article>
+{% empty %}
+<p>No news in this category yet.</p>
+{% endfor %}

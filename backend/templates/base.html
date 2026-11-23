@@ -1,0 +1,67 @@
+{% load static %}<!DOCTYPE html>
+<html lang="en" data-theme="{{ site.theme.style }}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}{{ title }}{% endblock %} | {{ site.name }}</title>
+    <meta name="description" content="{{ site.tagline }}">
+    <meta name="theme-color" content="{{ site.theme.colors.dark }}">
+    <link rel="icon" href="{{ site.logo }}" type="image/svg+xml">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Unbounded:wght@500;700;800&display=swap">
+    <link rel="stylesheet" href="{% static 'app/app.css' %}">
+</head>
+<body data-page="{{ page }}">
+    <div id="root">
+        <div class="ssr">
+            <header class="ssr-header">
+                <a href="/" class="ssr-logo">
+                    <img src="{{ site.logo }}" alt="" width="28" height="28">
+                    <strong>{{ site.name }}</strong>
+                </a>
+                <nav aria-label="Main">
+                    <ul>
+                        {% for item in site.navigation %}
+                        <li><a href="{{ item.url }}"{% if item.key == page %} aria-current="page"{% endif %}>{{ item.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </header>
+            <main>
+                {% if breadcrumbs %}
+                <nav aria-label="Breadcrumbs">
+                    <ol>
+                        {% for crumb in breadcrumbs %}
+                        <li><a href="{{ crumb.url }}">{{ crumb.title }}</a></li>
+                        {% endfor %}
+                    </ol>
+                </nav>
+                {% endif %}
+                {% if subsections %}
+                <nav data-section="subnav" aria-label="{{ section_title }}">
+                    <ul>
+                        <li><a href="/{{ page }}/"{% if not subsection %} aria-current="page"{% endif %}>All</a></li>
+                        {% for item in subsections %}
+                        <li><a href="{{ item.url }}"{% if item.slug == subsection %} aria-current="page"{% endif %}>{{ item.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+                {% endif %}
+                {% block content %}{% endblock %}
+            </main>
+            <footer>
+                <ul>
+                    {% for social in site.socials %}
+                    <li><a href="{{ social.url }}" target="_blank" rel="noopener">{{ social.name }}</a></li>
+                    {% endfor %}
+                </ul>
+                <p>{{ site.footer }}</p>
+                <p>{{ site.photo_note }}</p>
+            </footer>
+        </div>
+    </div>
+    {{ payload|json_script:"page-data" }}
+    <script type="module" src="{% static 'app/app.js' %}"></script>
+</body>
+</html>

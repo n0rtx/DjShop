@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section data-section="management">
+    <h1>{{ data.title }}</h1>
+    <p>{{ data.subtitle }}</p>
+    <ul>
+        {% for member in data.members %}
+        <li data-id="{{ member.id }}">
+            <a href="/management/{{ member.slug }}/"><h2>{{ member.name }}</h2></a>
+            <p><strong>{{ member.alias }}</strong> · {{ member.position }}</p>
+            <p>{{ member.bio }}</p>
+        </li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

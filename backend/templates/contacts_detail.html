@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section data-section="office" data-slug="{{ subsection }}">
+    <img src="{{ data.flag }}" alt="{{ data.country }}" width="48" height="36">
+    <h1>{{ data.country }}</h1>
+    <p>{{ data.office }}, {{ data.city }}</p>
+    <p>{{ data.note }}</p>
+    {% include "partials/channels.html" with channels=data.channels hours=data.hours map=data.map %}
+</section>
+
+<section data-section="shipping">
+    <h2>Shipping</h2>
+    <p>Delivery: {{ data.shipping.days }} days</p>
+    <p>Cost: ${{ data.shipping.cost|floatformat:2 }}</p>
+    {% if data.shipping.free_from %}<p>Free shipping from ${{ data.shipping.free_from|floatformat:2 }}</p>{% endif %}
+</section>
+{% endblock %}

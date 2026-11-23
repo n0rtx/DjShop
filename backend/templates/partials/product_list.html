@@ -1,0 +1,15 @@
+<ul>
+    {% for product in products %}
+    <li data-id="{{ product.id }}">
+        <a href="{{ product.url }}">
+            <img src="{{ product.image }}" alt="{{ product.name }}" width="240" height="180" loading="lazy">
+            <h3>{{ product.name }}</h3>
+        </a>
+        <p>
+            <data value="{{ product.price }}">${{ product.price|floatformat:2 }}</data>
+            {% if product.old_price %}<del>${{ product.old_price|floatformat:2 }}</del>{% endif %}
+        </p>
+        <p>{% if product.in_stock %}In stock{% else %}Out of stock{% endif %} · {{ product.rating }} / 5</p>
+    </li>
+    {% endfor %}
+</ul>

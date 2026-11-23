@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<article data-section="article" data-slug="{{ data.slug }}">
+    <p><a href="/news/{{ data.tag_slug }}/">{{ data.tag }}</a> · <time datetime="{{ data.date }}">{{ data.date }}</time> · {{ data.read_time }} min read</p>
+    <h1>{{ data.title }}</h1>
+    <figure>
+        <img src="{{ data.image }}" alt="" width="800" height="500">
+        <figcaption>Photo: {{ data.image_credit.author }}, {{ data.image_credit.license }}, <a href="{{ data.image_credit.source }}" rel="noopener">{{ data.image_credit.provider }}</a></figcaption>
+    </figure>
+    {% for paragraph in data.body %}
+    <p>{{ paragraph }}</p>
+    {% endfor %}
+</article>
+{% endblock %}
