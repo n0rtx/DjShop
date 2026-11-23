@@ -36,6 +36,10 @@ export default function App() {
 
   useEffect(() => {
     const path = location.pathname;
+    if (path.startsWith("/static/")) {
+      navigate("/", { replace: true });
+      return undefined;
+    }
     if (loadedPath.current === path) return undefined;
     let cancelled = false;
     setLoading(true);

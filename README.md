@@ -17,24 +17,22 @@ DjShop/
     └── src/
 ```
 
-## Run (only Django is needed, the React bundle is already built)
+## Run (everything from the project root)
 
 ```bash
 python3 -m venv .venv
-.venv/bin/pip install -r backend/requirements.txt
-cd backend
-../.venv/bin/python manage.py runserver
+.venv/bin/pip install -r requirements.txt
+.venv/bin/python manage.py runserver
 ```
 
-Open http://127.0.0.1:8000/
+Open http://127.0.0.1:8000/ — the React bundle is already built, Node is not required.
 
-## Frontend development
+## Frontend development (also from the root)
 
 ```bash
-cd frontend
-npm install
-npm run dev      # http://localhost:5173, data is proxied from Django on :8000
-npm run build    # writes backend/static/app/app.js and app.css
+npm install        # installs frontend dependencies
+npm run dev        # http://localhost:5173/, data is proxied from Django on :8000
+npm run build      # writes backend/static/app/app.js and app.css
 ```
 
 ## Sections
