@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { formatPrice } from "../api.js";
 import { useCart } from "../cart.jsx";
+import { useSession } from "../session.js";
 import Icon from "./Icon.jsx";
 
 export default function CartDrawer() {
   const { items, total, count, update, clear, open, setOpen } = useCart();
-  const [notice, setNotice] = useState(false);
+  const navigate = useNavigate();
+  const { user } = useSession();
 
   useEffect(() => {
     const onKey = (event) => event.key === "Escape" && setOpen(false);
@@ -16,7 +18,6 @@ export default function CartDrawer() {
 
   useEffect(() => {
     document.body.classList.toggle("no-scroll", open);
-    if (!open) setNotice(false);
   }, [open]);
 
   return (
@@ -67,8 +68,15 @@ export default function CartDrawer() {
                 <span>Total</span>
                 <strong>{formatPrice(total)}</strong>
               </div>
-              {notice && <p className="drawer__notice">This is an educational project, so checkout is disabled. Thanks for testing NEON PULSE!</p>}
-              <button type="button" className="button button--primary button--block" onClick={() => setNotice(true)}>
+              <button
+                type="button"
+                className="button button--primary button--block"
+                onClick={() => {
+                  setOpen(false);
+                  navigate(user ? "/checkout/" : "/account/login/?next=%2Fcheckout%2F");
+                }}
+              >
+                <Icon name="check-decagram-outline" size={20} />
                 Checkout
               </button>
               <button type="button" className="button button--ghost button--block" onClick={clear}>

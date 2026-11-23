@@ -411,3 +411,44 @@
     font-size: 12px;
   }
 }
+
+.header__account {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 48px;
+  padding: 0 12px;
+  border-radius: 14px;
+  color: #fff;
+  transition: background 0.2s;
+}
+
+.header__account:hover,
+.header__account.is-active {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.header__account span {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
+  max-width: 120px;
+}
+
+.header__account small {
+  font-size: 12px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.header__account strong {
+  font-size: 14px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+@media (max-width: 1100px) {
+  .header__account span {
+    display: none;
+  }
+}

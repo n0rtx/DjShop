@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section data-section="checkout">
+    <h1>{{ data.title }}</h1>
+    <p>{{ data.subtitle }}</p>
+    <noscript><p>Checkout needs JavaScript: the cart is stored in your browser.</p></noscript>
+    {% include "partials/form.html" with form=data.form submit="Place order" %}
+</section>
+{% endblock %}

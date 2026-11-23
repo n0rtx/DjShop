@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.http import JsonResponse
+from django.middleware.csrf import get_token
 from django.shortcuts import render
 
 from .content import SITE
@@ -24,6 +25,18 @@ def crumbs(*items):
     return [{"title": "Home", "url": "/"}] + [{"title": title, "url": url} for title, url in items]
 
 
+def current_user(request):
+    user = getattr(request, "user", None)
+    if not user or not user.is_authenticated:
+        return None
+    return {
+        "username": user.username,
+        "name": user.first_name or user.username,
+        "email": user.email,
+        "is_staff": user.is_staff,
+    }
+
+
 def respond(request, page, title, template, data, section_title=None, subsection=None, subsections=None, breadcrumbs=None, status=200):
     payload = {
         "page": page,
@@ -35,6 +48,8 @@ def respond(request, page, title, template, data, section_title=None, subsection
         "path": request.path,
         "status": status,
         "site": SITE,
+        "user": current_user(request),
+        "csrf": get_token(request),
         "data": data,
     }
     if wants_json(request):

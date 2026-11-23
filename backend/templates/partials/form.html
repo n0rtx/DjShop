@@ -1,0 +1,24 @@
+<form method="post" novalidate>
+    {% csrf_token %}
+    {% for error in form.errors %}<p role="alert">{{ error }}</p>{% endfor %}
+    {% for field in form.fields %}
+    <p>
+        {% if field.type == "radio" or field.type == "select" %}
+        <label for="id_{{ field.name }}">{{ field.label }}</label>
+        <select id="id_{{ field.name }}" name="{{ field.name }}">
+            {% for choice in field.choices %}<option value="{{ choice.value }}"{% if choice.value == field.value %} selected{% endif %}>{{ choice.label }}</option>{% endfor %}
+        </select>
+        {% elif field.type == "textarea" %}
+        <label for="id_{{ field.name }}">{{ field.label }}</label>
+        <textarea id="id_{{ field.name }}" name="{{ field.name }}">{{ field.value }}</textarea>
+        {% else %}
+        <label for="id_{{ field.name }}">{{ field.label }}</label>
+        <input id="id_{{ field.name }}" type="{{ field.type }}" name="{{ field.name }}" value="{{ field.value }}"{% if field.required %} required{% endif %}>
+        {% endif %}
+        {% if field.help %}<small>{{ field.help }}</small>{% endif %}
+        {% for error in field.errors %}<strong role="alert">{{ error }}</strong>{% endfor %}
+    </p>
+    {% endfor %}
+    {{ extra }}
+    <button type="submit">{{ submit }}</button>
+</form>

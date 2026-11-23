@@ -14,8 +14,39 @@ export async function loadPage(path) {
     headers: { Accept: "application/json" },
   });
   const payload = await response.json();
-  const finalPath = response.redirected ? new URL(response.url).pathname : null;
-  return { payload, finalPath };
+  return { payload, finalPath: response.redirected ? cleanPath(response.url) : null };
+}
+
+function cleanPath(url) {
+  const parsed = new URL(url);
+  parsed.searchParams.delete("format");
+  return parsed.pathname + parsed.search;
+}
+
+export function csrfToken() {
+  const match = document.cookie.match(/(?:^|;\s*)csrftoken=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : "";
+}
+
+export async function postJson(path, body, fallbackToken = "") {
+  const separator = path.includes("?") ? "&" : "?";
+  const response = await fetch(`${path}${separator}format=json`, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: {
+      "Content-Type": "application/json",
+      Accept: "application/json",
+      "X-CSRFToken": csrfToken() || fallbackToken,
+    },
+    body: JSON.stringify(body),
+  });
+  let data = null;
+  try {
+    data = await response.json();
+  } catch {
+    data = null;
+  }
+  return { ok: response.ok, status: response.status, data };
 }
 
 export function formatPrice(value) {

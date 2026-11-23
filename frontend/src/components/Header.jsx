@@ -1,11 +1,13 @@
 import { Link, NavLink } from "react-router-dom";
 import { useCart } from "../cart.jsx";
+import { useSession } from "../session.js";
 import CatalogMenu from "./CatalogMenu.jsx";
 import Icon from "./Icon.jsx";
 import Search from "./Search.jsx";
 
 export default function Header({ site, page }) {
   const { count, setOpen } = useCart();
+  const { user } = useSession();
   return (
     <>
       <div className="promo-bar">
@@ -31,6 +33,13 @@ export default function Header({ site, page }) {
                 <small>11:00 – 21:00, every day</small>
               </span>
             </a>
+            <Link to={user ? "/account/" : "/account/login/"} className={`header__account ${page === "account" ? "is-active" : ""}`}>
+              <Icon name={user ? "account-circle" : "account-circle-outline"} size={26} />
+              <span>
+                <small>{user ? "My account" : "Welcome"}</small>
+                <strong>{user ? user.name : "Sign in"}</strong>
+              </span>
+            </Link>
             <button type="button" className="header__cart" onClick={() => setOpen(true)} aria-label="Open cart">
               <Icon name="cart-outline" size={26} />
               {count > 0 && <span className="header__badge">{count}</span>}

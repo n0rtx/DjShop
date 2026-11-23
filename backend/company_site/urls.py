@@ -1,3 +1,4 @@
+from django.contrib import admin
 from django.urls import include, path, re_path
 from django.views.generic import RedirectView
 
@@ -15,6 +16,9 @@ SECTIONS = "news|management|about|contacts"
 urlpatterns = [
     path("", views.home, name="home"),
     path("catalog/", include("catalog.urls")),
+    path("admin/", admin.site.urls),
+    path("account/", include("accounts.urls")),
+    path("checkout/", include("orders.urls")),
     path("news/", views.news, name="news"),
     path("management/", views.management, name="management"),
     path("about/", views.about, name="about"),

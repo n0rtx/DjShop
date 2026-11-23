@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section data-section="account">
+    <h1>{{ data.profile.name }}</h1>
+    <p>{{ data.profile.username }} · {{ data.profile.email }}</p>
+    <form method="post" action="/account/logout/">{% csrf_token %}<button type="submit">Sign out</button></form>
+    <h2>Order history</h2>
+    {% for order in data.orders %}
+    <article data-order="{{ order.id }}">
+        <h3>{{ order.number }} — {{ order.status }} — ${{ order.total }}</h3>
+        <p>{{ order.delivery }}, {{ order.city }} {{ order.address }}</p>
+        <ul>
+            {% for item in order.items %}
+            <li><a href="{{ item.url }}">{{ item.name }}</a> × {{ item.qty }} — ${{ item.line_total }}</li>
+            {% endfor %}
+        </ul>
+    </article>
+    {% empty %}
+    <p>No orders yet. <a href="/catalog/">Go to catalog</a></p>
+    {% endfor %}
+</section>
+{% endblock %}

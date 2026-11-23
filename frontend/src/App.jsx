@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { loadPage, readEmbeddedPayload } from "./api.js";
 import Layout from "./components/Layout.jsx";
@@ -14,6 +14,10 @@ import AboutDetail from "./pages/AboutDetail.jsx";
 import Contacts from "./pages/Contacts.jsx";
 import Office from "./pages/Office.jsx";
 import NotFound from "./pages/NotFound.jsx";
+import Auth from "./pages/Auth.jsx";
+import Account from "./pages/Account.jsx";
+import Checkout from "./pages/Checkout.jsx";
+import { SessionContext } from "./session.js";
 
 function pickPage(payload) {
   const { page, subsection, data } = payload;
@@ -23,6 +27,9 @@ function pickPage(payload) {
   if (page === "management") return subsection ? Member : Team;
   if (page === "about") return subsection ? AboutDetail : About;
   if (page === "contacts") return subsection ? Office : Contacts;
+  if (page === "login" || page === "register") return Auth;
+  if (page === "account") return Account;
+  if (page === "checkout") return Checkout;
   return NotFound;
 }
 
@@ -32,11 +39,21 @@ export default function App() {
   const [payload, setPayload] = useState(readEmbeddedPayload);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const loadedPath = useRef(payload ? location.pathname : null);
+  const [version, setVersion] = useState(0);
+  const loadedPath = useRef(payload ? location.pathname + location.search : null);
+
+  const go = useCallback(
+    (to) => {
+      loadedPath.current = null;
+      setVersion((value) => value + 1);
+      navigate(to);
+    },
+    [navigate],
+  );
 
   useEffect(() => {
-    const path = location.pathname;
-    if (path.startsWith("/static/")) {
+    const path = location.pathname + location.search;
+    if (location.pathname.startsWith("/static/")) {
       navigate("/", { replace: true });
       return undefined;
     }
@@ -44,7 +61,7 @@ export default function App() {
     let cancelled = false;
     setLoading(true);
     setError(null);
-    loadPage(path + location.search)
+    loadPage(path)
       .then(({ payload: next, finalPath }) => {
         if (cancelled) return;
         if (finalPath && finalPath !== path) {
@@ -61,11 +78,13 @@ export default function App() {
     return () => {
       cancelled = true;
     };
-  }, [location.pathname, location.search, navigate]);
+  }, [location.pathname, location.search, navigate, version]);
 
   useEffect(() => {
     if (payload) document.title = `${payload.title} | ${payload.site.name}`;
   }, [payload]);
+
+  const session = useMemo(() => ({ user: payload?.user || null, csrf: payload?.csrf || "", go }), [payload, go]);
 
   if (!payload) {
     return (
@@ -79,8 +98,10 @@ export default function App() {
   const Page = pickPage(payload);
 
   return (
-    <Layout payload={payload} loading={loading}>
-      <Page key={payload.path} payload={payload} data={payload.data} site={payload.site} />
-    </Layout>
+    <SessionContext.Provider value={session}>
+      <Layout payload={payload} loading={loading}>
+        <Page key={payload.path + version} payload={payload} data={payload.data} site={payload.site} />
+      </Layout>
+    </SessionContext.Provider>
   );
 }

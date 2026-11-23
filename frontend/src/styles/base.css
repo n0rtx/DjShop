@@ -88,6 +88,11 @@ p {
   margin: 0;
 }
 
+dl,
+dd {
+  margin: 0;
+}
+
 ul,
 ol {
   margin: 0;

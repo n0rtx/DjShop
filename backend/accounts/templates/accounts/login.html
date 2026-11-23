@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section data-section="login">
+    <h1>{{ data.title }}</h1>
+    <p>{{ data.subtitle }}</p>
+    {% include "partials/form.html" with form=data.form submit="Sign in" %}
+    <p>{{ data.switch.text }} <a href="{{ data.switch.url }}">{{ data.switch.label }}</a></p>
+</section>
+{% endblock %}
